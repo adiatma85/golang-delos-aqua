@@ -1,0 +1,45 @@
+# Reference for docker-compose
+# https://levelup.gitconnected.com/dockerized-crud-restful-api-with-go-gorm-jwt-postgresql-mysql-and-testing-61d731430bd8
+
+version: '3.9'
+services:
+  db:
+    container_name: golang_rest-template-mysql-container
+    restart: always
+    image: mysql:5.7
+    environment:
+      # Mysql Database
+      - MYSQL_DATABASE="${DATABASE_NAME}"
+      # Mysql Password
+      - MYSQL_ROOT_PASSWORD="${DATABASE_PASSWORD}"
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    volumes:
+      - my-db:/var/lib/mysql
+    networks:
+      - default
+
+  app:
+    container_name: golang_container
+    tty: true
+    build: .
+    ports:
+      - 5000:5000
+    restart: on-failure
+    volumes:
+      -  api:/usr/src/app/
+    depends_on:
+      - db
+    networks:
+      - default
+ 
+# Names our volume
+volumes:
+  api:
+  my-db:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  default:
+    driver: bridge
