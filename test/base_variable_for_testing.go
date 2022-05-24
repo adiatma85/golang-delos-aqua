@@ -8,7 +8,6 @@ import (
 	"github.com/adiatma85/golang-rest-template-api/internal/api"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/config"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/db"
-	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 )
 
 // Helper for database params
@@ -26,8 +25,8 @@ var (
 
 	// Models that involved
 	Models = []interface{}{
-		&models.User{},
-		&models.Product{},
+		// &models.User{},
+		// &models.Product{},
 	}
 )
 
