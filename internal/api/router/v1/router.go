@@ -2,8 +2,8 @@ package v1
 
 import (
 	"fmt"
+	"net/http"
 
-	"github.com/adiatma85/golang-rest-template-api/internal/api/handler"
 	"github.com/adiatma85/golang-rest-template-api/internal/api/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -32,40 +32,10 @@ func Setup() *gin.Engine {
 
 	// Routes for v1
 	v1Route := app.Group("/api/v1")
-
-	// AuthGroup with "auth" prefix
-	authGroup := v1Route.Group("auth")
-	authHandler := handler.GetAuthHandler()
 	{
-		authGroup.POST("login", authHandler.AuthLogin)
-		authGroup.POST("register", authHandler.AuthRegister)
+		v1Route.GET("", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusOK, "Welcome")
+		})
 	}
-
-	// UserGroup with "user" prefix
-	userGroup := v1Route.Group("users")
-	userHandler := handler.GetUserHandler()
-	{
-		userGroup.GET("", middleware.AuthJWT(), userHandler.GetAllUser)
-		userGroup.POST("", middleware.AuthJWT(), userHandler.CreateUser)
-		userGroup.GET("query", middleware.AuthJWT(), userHandler.QueryUsers)
-		userGroup.GET(":userId", middleware.AuthJWT(), userHandler.GetSpecificUser)
-		userGroup.PUT(":userId", middleware.AuthJWT(), userHandler.UpdateSpecificUser)
-		userGroup.DELETE(":userId", middleware.AuthJWT(), userHandler.DeleteSpecificUser)
-		userGroup.DELETE("multi", middleware.AuthJWT(), userHandler.DeleteUsersWithIds)
-	}
-
-	// ProductGroup
-	productrGroup := v1Route.Group("products")
-	productHandler := handler.GetProductHandler()
-	{
-		productrGroup.GET("", middleware.AuthJWT(), productHandler.GetAllProduct)
-		productrGroup.POST("", middleware.AuthJWT(), productHandler.CreateProduct)
-		productrGroup.GET("query", middleware.AuthJWT(), productHandler.QueryProducts)
-		productrGroup.GET(":productId", middleware.AuthJWT(), productHandler.GetSpecificProduct)
-		productrGroup.PUT(":productId", middleware.AuthJWT(), productHandler.UpdateSpecificProduct)
-		productrGroup.DELETE(":productId", middleware.AuthJWT(), productHandler.DeleteSpecificProduct)
-		productrGroup.DELETE("multi", middleware.AuthJWT(), productHandler.DeleteProductsWithIds)
-	}
-
 	return app
 }
