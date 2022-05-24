@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/config"
-	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -43,12 +42,14 @@ func SetupDB() {
 
 	switch driver {
 	case "mysql":
-		db, err = gorm.Open(mysql.Open(username+":"+password+"@tcp("+host+":"+port+")/"+database+"?charset=utf8&parseTime=True&loc=Local"), gormConfig)
+		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", username, password, host, port, database)
+		db, err = gorm.Open(mysql.Open(dsn), gormConfig)
 		if err != nil {
 			fmt.Println("db err:", err)
 		}
 	case "postgres":
-		db, err = gorm.Open(postgres.Open("host="+host+" port="+port+" user="+username+" dbname="+database+"  sslmode=disable password="+password), gormConfig)
+		dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", host, port, username, database, password)
+		db, err = gorm.Open(postgres.Open(dsn), gormConfig)
 		if err != nil {
 			fmt.Println("db err:", err)
 		}
@@ -78,8 +79,6 @@ func SetupTestingDb(host, username, password, port, database string) {
 
 // AutoMigrate project models
 func migration() {
-	DB.AutoMigrate(&models.User{})
-	DB.AutoMigrate(&models.Product{})
 }
 
 func GetDB() *gorm.DB {
