@@ -66,8 +66,8 @@ func SetupDB() {
 
 // Setup for testing database
 func SetupTestingDb(host, username, password, port, database string) {
-	// For the sake of simplicity, right now database testing is in mysql
-	db, err := gorm.Open(mysql.Open(username+":"+password+"@tcp("+host+":"+port+")/"+database+"?charset=utf8&parseTime=True&loc=Local"), &gorm.Config{})
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", username, password, host, port, database)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("db err for testing :", err)
 		panic(err.Error())
