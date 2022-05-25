@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/adiatma85/golang-rest-template-api/internal/api/handler"
 	"github.com/adiatma85/golang-rest-template-api/internal/api/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -36,6 +37,18 @@ func Setup() *gin.Engine {
 		v1Route.GET("", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusOK, "Welcome")
 		})
+	}
+
+	// FarmGroup
+	farmGroup := v1Route.Group("farm")
+	farmHandler := handler.GetFarmHandler()
+	{
+		farmGroup.GET("", farmHandler.GetAllFarm)
+		farmGroup.GET(":farmId", farmHandler.GetById)
+		farmGroup.POST("", farmHandler.CreateFarm)
+		// Need PUT Route Inmprovisasion
+		farmGroup.PUT(":farmId", farmHandler.Update)
+		farmGroup.DELETE(":farmId", farmHandler.Delete)
 	}
 	return app
 }
