@@ -3,11 +3,10 @@ package test
 import (
 	// "github.com/adiatma85/golang-rest-template-api/internal/api"
 
-	"fmt"
-
 	"github.com/adiatma85/golang-rest-template-api/internal/api"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/config"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/db"
+	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 )
 
 // Helper for database params
@@ -25,8 +24,9 @@ var (
 
 	// Models that involved
 	Models = []interface{}{
-		// &models.User{},
-		// &models.Product{},
+		&models.Farm{},
+		&models.Pond{},
+		&models.RecordApi{},
 	}
 )
 
@@ -34,7 +34,6 @@ var (
 func SetupInitialize(path string) {
 	api.SetConfiguration(path)
 	configuration := config.GetConfig()
-	fmt.Println(configuration.Database_Test.Dbname)
 	Database = configuration.Database_Test.Dbname
 	Username = configuration.Database_Test.Username
 	Password = configuration.Database_Test.Password
