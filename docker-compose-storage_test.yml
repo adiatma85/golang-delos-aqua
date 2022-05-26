@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+   db:
+    image: "postgres"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres_test
+      - POSTGRES_PASSWORD=postgres_test
+      - POSTGRES_DB=postgres_test
+    ports:
+    # <Port exposed> : < MySQL Port running inside container>
+      - '5455:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local
