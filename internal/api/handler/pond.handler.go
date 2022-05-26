@@ -57,6 +57,14 @@ func (handler *PondHandler) CreatePond(c *gin.Context) {
 	// smapping the struct
 	smapping.FillStruct(pondModel, smapping.MapFields(&createPondRequest))
 
+	// Check if any duplicate is already exist
+	if existedPond, _ := pondRepo.GetByModel(*pondModel); existedPond != nil {
+		// If exist, return response with "conflict"
+		response := response.BuildFailedResponse("failed to add new farm due to duplicate resource", "duplicate entry")
+		c.AbortWithStatusJSON(http.StatusConflict, response)
+		return
+	}
+
 	if newPond, err := pondRepo.Create(*pondModel); err != nil {
 		response := response.BuildFailedResponse("failed to add new pond due to internal server error", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response)

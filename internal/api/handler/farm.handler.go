@@ -57,6 +57,14 @@ func (handler *FarmHandler) CreateFarm(c *gin.Context) {
 	// smapping the struct
 	smapping.FillStruct(farmModel, smapping.MapFields(&createFarmRequest))
 
+	// Check if any duplicate is already exist
+	if existedFarm, _ := farmRepo.GetByModel(*farmModel); existedFarm != nil {
+		// If exist, return response with "conflict"
+		response := response.BuildFailedResponse("failed to add new farm due to duplicate resource", "duplicate entry")
+		c.AbortWithStatusJSON(http.StatusConflict, response)
+		return
+	}
+
 	if newFarm, err := farmRepo.Create(*farmModel); err != nil {
 		response := response.BuildFailedResponse("failed to add new farm due to internal server error", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response)

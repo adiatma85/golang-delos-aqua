@@ -14,6 +14,7 @@ type PondRepositoryInterface interface {
 	Create(pond models.Pond) (models.Pond, error)
 	GetAll() (*[]models.Pond, error)
 	GetById(pondId string) (*models.Pond, error)
+	GetByModel(where models.Pond) (*models.Pond, error)
 	Update(pond *models.Pond) error
 	Delete(pond *models.Pond) error
 }
@@ -52,6 +53,16 @@ func (repo *PondRepository) GetById(pondId string) (*models.Pond, error) {
 		return nil, err
 	}
 	return &pond, nil
+}
+
+// Func to Get from Struct Model defined
+func (repo *PondRepository) GetByModel(where models.Pond) (*models.Pond, error) {
+	var pond models.Pond
+	_, err := First(&where, &pond, []string{})
+	if err != nil {
+		return nil, err
+	}
+	return &pond, err
 }
 
 // Func to Update Pond by Model defined in handler

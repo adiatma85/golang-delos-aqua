@@ -11,6 +11,7 @@ type FarmRepositoryInterface interface {
 	Create(farm models.Farm) (models.Farm, error)
 	GetAll() (*[]models.Farm, error)
 	GetById(farmId string) (*models.Farm, error)
+	GetByModel(where models.Farm) (*models.Farm, error)
 	Update(farm *models.Farm) error
 	Delete(farm *models.Farm) error
 }
@@ -52,6 +53,16 @@ func (repo *FarmRepository) GetById(farmId string) (*models.Farm, error) {
 		return nil, err
 	}
 	return &farm, nil
+}
+
+// Func to Get from Struct Model defined
+func (repo *FarmRepository) GetByModel(where models.Farm) (*models.Farm, error) {
+	var farm models.Farm
+	_, err := First(&where, &farm, []string{})
+	if err != nil {
+		return nil, err
+	}
+	return &farm, err
 }
 
 // Func to update farm according to model defined
