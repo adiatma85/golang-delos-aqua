@@ -17,8 +17,6 @@ func SetConfiguration(configPath string) {
 	config.Setup(configPath)
 	// Calling setup db
 	db.SetupDB()
-	// Calling cloudinary storage
-	// config.InitializeCloudinary()
 	gin.SetMode(config.GetConfig().Server.Mode)
 
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/adiatma85/golang-rest-template-api/internal/pkg/dto"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/repository"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/validator"
@@ -113,7 +114,9 @@ func (handler *FarmHandler) GetById(c *gin.Context) {
 		return
 	}
 
-	response := response.BuildSuccessResponse("success to fetch data", farm)
+	farmDto := dto.FarmResponseDto{}
+	smapping.FillStruct(&farmDto, smapping.MapFields(farm))
+	response := response.BuildSuccessResponse("success to fetch data", farmDto)
 	c.JSON(http.StatusOK, response)
 }
 

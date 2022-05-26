@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/adiatma85/golang-rest-template-api/internal/pkg/dto"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/repository"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/validator"
@@ -57,11 +58,17 @@ func (handler *PondHandler) CreatePond(c *gin.Context) {
 	smapping.FillStruct(pondModel, smapping.MapFields(&createPondRequest))
 
 	if newPond, err := pondRepo.Create(*pondModel); err != nil {
-		response := response.BuildFailedResponse("failed to add new farm due to internal server error", err.Error())
+		response := response.BuildFailedResponse("failed to add new pond due to internal server error", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, response)
 		return
 	} else {
-		response := response.BuildSuccessResponse("success add new farm instance to database", newPond)
+		farmRepo := repository.GetFarmRepository()
+		pondFarm, _ := farmRepo.GetById(fmt.Sprint(newPond.FarmId))
+		newPond.Farm = *pondFarm
+
+		pondDto := dto.PondResponseDto{}
+		smapping.FillStruct(&pondDto, smapping.MapFields(&newPond))
+		response := response.BuildSuccessResponse("success add new pond instance to database", pondDto)
 		c.JSON(http.StatusOK, response)
 		return
 	}
@@ -113,7 +120,9 @@ func (handler *PondHandler) GetById(c *gin.Context) {
 		return
 	}
 
-	response := response.BuildSuccessResponse("success to fetch data", pond)
+	pondDto := dto.PondResponseDto{}
+	smapping.FillStruct(&pondDto, smapping.MapFields(pond))
+	response := response.BuildSuccessResponse("success to fetch data", pondDto)
 	c.JSON(http.StatusOK, response)
 }
 
@@ -123,7 +132,7 @@ func (handler *PondHandler) Update(c *gin.Context) {
 	err := c.ShouldBind(&updatePondRequest)
 
 	if err != nil {
-		response := response.BuildFailedResponse("failed to update new farm due to bad request", err.Error())
+		response := response.BuildFailedResponse("failed to update new pond due to bad request", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
@@ -137,11 +146,17 @@ func (handler *PondHandler) Update(c *gin.Context) {
 		// Check whether there is error when creating
 		// Need new "small functional" so it does not duplicate
 		if newPond, err := pondRepo.Create(*pondModel); err != nil {
-			response := response.BuildFailedResponse("failed to add new farm due to internal server error", err.Error())
+			response := response.BuildFailedResponse("failed to add new pond due to internal server error", err.Error())
 			c.AbortWithStatusJSON(http.StatusInternalServerError, response)
 			return
 		} else {
-			response := response.BuildSuccessResponse("success add new farm instance to database", newPond)
+			farmRepo := repository.GetFarmRepository()
+			pondFarm, _ := farmRepo.GetById(fmt.Sprint(newPond.FarmId))
+			newPond.Farm = *pondFarm
+
+			pondDto := dto.PondResponseDto{}
+			smapping.FillStruct(&pondDto, smapping.MapFields(&newPond))
+			response := response.BuildSuccessResponse("success add new pond instance to database", pondDto)
 			c.JSON(http.StatusOK, response)
 			return
 		}
@@ -159,7 +174,7 @@ func (handler *PondHandler) Update(c *gin.Context) {
 		err = pondRepo.Update(existedPond)
 
 		if err != nil {
-			response := response.BuildFailedResponse("failed to update a farm", err.Error())
+			response := response.BuildFailedResponse("failed to update a pond", err.Error())
 			c.AbortWithStatusJSON(http.StatusInternalServerError, response)
 			return
 		}
