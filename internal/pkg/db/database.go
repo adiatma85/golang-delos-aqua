@@ -80,7 +80,7 @@ func SetupTestingDb(host, username, password, port, database string) {
 
 // AutoMigrate project models
 func migration() {
-	DB.AutoMigrate(&models.Farm{}, &models.Pond{})
+	DB.AutoMigrate(&models.Farm{}, &models.Pond{}, &models.RecordApi{})
 }
 
 func GetDB() *gorm.DB {

@@ -31,9 +31,8 @@ type FarmHandlerInterface interface {
 // Func to get Farm Handler instance
 func GetFarmHandler() FarmHandlerInterface {
 	if farmHandler == nil {
-		farmRepo := repository.GetFarmRepository()
 		farmHandler = &FarmHandler{
-			farmRepo,
+			FarmRepository: repository.GetFarmRepository(),
 		}
 	}
 	return farmHandler

@@ -28,6 +28,8 @@ func Setup() *gin.Engine {
 		)
 	}))
 	app.Use(gin.Recovery())
+	app.Use(middleware.CORS())
+	app.Use(middleware.RecordApi())
 	app.NoMethod(middleware.NoMethodHandler())
 	app.NoRoute(middleware.NoRouteHandler())
 
