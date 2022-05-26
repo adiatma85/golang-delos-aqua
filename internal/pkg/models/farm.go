@@ -6,5 +6,5 @@ import "gorm.io/gorm"
 type Farm struct {
 	gorm.Model
 	Name  string `gorm:"type:varchar(100)" json:"name"`
-	Ponds []Pond `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Ponds []Pond `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"ponds"`
 }

@@ -56,11 +56,11 @@ func Setup() *gin.Engine {
 	pondHandler := handler.GetPondHandler()
 	{
 		pondGroup.GET("", pondHandler.GetAllPond)
-		pondGroup.GET(":farmId", pondHandler.GetById)
+		pondGroup.GET(":pondId", pondHandler.GetById)
 		pondGroup.POST("", pondHandler.CreatePond)
 		// Non-standar PUT route according to requirement
 		pondGroup.PUT("", pondHandler.Update)
-		pondGroup.DELETE(":farmId", pondHandler.Delete)
+		pondGroup.DELETE(":pondId", pondHandler.Delete)
 	}
 
 	return app

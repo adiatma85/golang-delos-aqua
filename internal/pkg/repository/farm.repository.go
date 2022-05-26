@@ -38,7 +38,7 @@ func (repo *FarmRepository) Create(farm models.Farm) (models.Farm, error) {
 // Func to get All Farm without Pagination
 func (repo *FarmRepository) GetAll() (*[]models.Farm, error) {
 	var farms []models.Farm
-	err := Find(&models.Farm{}, &farms, []string{}, "id asc")
+	err := Find(&models.Farm{}, &farms, []string{"Ponds"}, "id asc")
 	return &farms, err
 }
 
@@ -47,7 +47,7 @@ func (repo *FarmRepository) GetById(farmId string) (*models.Farm, error) {
 	var farm models.Farm
 	where := models.Farm{}
 	where.ID, _ = helpers.ParseUint(farmId)
-	_, err := First(&where, &farm, []string{})
+	_, err := First(&where, &farm, []string{"Ponds"})
 	if err != nil {
 		return nil, err
 	}

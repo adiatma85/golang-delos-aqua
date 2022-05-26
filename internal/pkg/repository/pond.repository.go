@@ -38,7 +38,7 @@ func (repo *PondRepository) Create(pond models.Pond) (models.Pond, error) {
 // Func to get All Pond without Pagination
 func (repo *PondRepository) GetAll() (*[]models.Pond, error) {
 	var ponds []models.Pond
-	err := Find(&models.Pond{}, &ponds, []string{}, "id asc")
+	err := Find(&models.Pond{}, &ponds, []string{"Farm"}, "id asc")
 	return &ponds, err
 }
 
@@ -47,7 +47,7 @@ func (repo *PondRepository) GetById(pondId string) (*models.Pond, error) {
 	var pond models.Pond
 	where := models.Pond{}
 	where.ID, _ = helpers.ParseUint(pondId)
-	_, err := First(&where, &pond, []string{})
+	_, err := First(&where, &pond, []string{"Farm"})
 	if err != nil {
 		return nil, err
 	}

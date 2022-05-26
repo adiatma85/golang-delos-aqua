@@ -30,6 +30,11 @@ type PondHandlerInterface interface {
 
 // Func to get Pond Handler instance
 func GetPondHandler() PondHandlerInterface {
+	if pondHandler == nil {
+		pondHandler = &PondHandler{
+			PondRepository: repository.GetPondRepository(),
+		}
+	}
 	return pondHandler
 }
 
