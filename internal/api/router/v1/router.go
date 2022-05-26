@@ -35,10 +35,12 @@ func Setup() *gin.Engine {
 
 	// Routes for v1
 	v1Route := app.Group("/api/v1")
+	recordApiHandler := handler.GetRecordApiHandler()
 	{
 		v1Route.GET("", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusOK, "Welcome")
 		})
+		v1Route.GET("records", recordApiHandler.GetAllRecord)
 	}
 
 	// FarmGroup
