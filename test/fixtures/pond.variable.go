@@ -1,8 +1,8 @@
-package repository
+package fixtures
 
 import "github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 
-var ponds []models.Pond = []models.Pond{
+var Ponds []models.Pond = []models.Pond{
 	{
 		Name:   "Pond 1 in Farm 1",
 		FarmId: 1,
@@ -17,7 +17,7 @@ var ponds []models.Pond = []models.Pond{
 	},
 }
 
-var willBePond models.Pond = models.Pond{
+var WillBePond models.Pond = models.Pond{
 	Name:   "Random Pond",
 	FarmId: 1,
 }

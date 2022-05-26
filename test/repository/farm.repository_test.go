@@ -7,6 +7,7 @@ import (
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/repository"
 	"github.com/adiatma85/golang-rest-template-api/test"
+	"github.com/adiatma85/golang-rest-template-api/test/fixtures"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"
 )
@@ -29,7 +30,7 @@ func (suite *FarmRepositorySuite) SetupSuite() {
 	suite.farmRepo = repository.GetFarmRepository()
 
 	// inserting dummy data
-	for _, farm := range farms {
+	for _, farm := range fixtures.Farms {
 		suite.farmRepo.Create(farm)
 	}
 }
@@ -37,10 +38,10 @@ func (suite *FarmRepositorySuite) SetupSuite() {
 // Create Farm instance Test
 func (suite *FarmRepositorySuite) TestCreateFarm_Positive() {
 	// Creating Farm
-	createdFarm, err := suite.farmRepo.Create(willBeFarm)
+	createdFarm, err := suite.farmRepo.Create(fixtures.WillBeFarm)
 
 	a := suite.Assert()
-	a.Equal(willBeFarm.Name, createdFarm.Name, "both of the name from dummy data and existed farm should have the same value")
+	a.Equal(fixtures.WillBeFarm.Name, createdFarm.Name, "both of the name from dummy data and existed farm should have the same value")
 	a.NoError(err, "should have no error when creating new farm with this parameter")
 }
 
@@ -59,7 +60,7 @@ func (suite *FarmRepositorySuite) TestGetById_Positive() {
 	a := suite.Assert()
 
 	a.Equal(uint(1), farm.ID, "both of the id from client data and existed farm should have the same value")
-	a.Equal(farms[0].Name, farm.Name, "both of the name from dummy data and existed farm should have the same value")
+	a.Equal(fixtures.Farms[0].Name, farm.Name, "both of the name from dummy data and existed farm should have the same value")
 	a.NoError(err, "should have no error when fetching farm (singular fetch by id)")
 }
 
@@ -134,5 +135,3 @@ func (suite *FarmRepositorySuite) TestDeleteFarm_Positive() {
 	err := suite.farmRepo.Delete(&farm)
 	a.NoError(err, "should have no error when deleting farm")
 }
-
-// Menambahkan find by model

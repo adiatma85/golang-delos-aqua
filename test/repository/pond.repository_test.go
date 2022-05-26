@@ -7,6 +7,7 @@ import (
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/repository"
 	"github.com/adiatma85/golang-rest-template-api/test"
+	"github.com/adiatma85/golang-rest-template-api/test/fixtures"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"
 )
@@ -32,12 +33,12 @@ func (suite *PondRepositorySuite) SetupSuite() {
 	farmRepo := repository.GetFarmRepository()
 
 	// inserting dummy data for farms
-	for _, farm := range farms {
+	for _, farm := range fixtures.Farms {
 		farmRepo.Create(farm)
 	}
 
 	// inserting dummy data for ponds
-	for _, pond := range ponds {
+	for _, pond := range fixtures.Ponds {
 		suite.pondRepo.Create(pond)
 	}
 }
@@ -45,10 +46,10 @@ func (suite *PondRepositorySuite) SetupSuite() {
 // Create Farm instance Test
 func (suite *PondRepositorySuite) TestCreatePond_Positive() {
 	// Creating Pond
-	createdPond, err := suite.pondRepo.Create(willBePond)
+	createdPond, err := suite.pondRepo.Create(fixtures.WillBePond)
 
 	a := suite.Assert()
-	a.Equal(willBePond.Name, createdPond.Name, "both of the name from dummy data and existed pond should have the same value")
+	a.Equal(fixtures.WillBePond.Name, createdPond.Name, "both of the name from dummy data and existed pond should have the same value")
 	a.NoError(err, "should have no error when creating new pond with this parameter")
 }
 
@@ -67,8 +68,8 @@ func (suite *PondRepositorySuite) TestGetById_Positive() {
 	a := suite.Assert()
 
 	a.Equal(uint(1), pond.ID, "both of the id from client data and existed farm should have the same value")
-	a.Equal(ponds[0].Name, pond.Name, "both of the name from dummy data and existed farm should have the same value")
-	a.Equal(ponds[0].FarmId, pond.FarmId, "both of the farm_id from dummy data and existed farm should have the same value")
+	a.Equal(fixtures.Ponds[0].Name, pond.Name, "both of the name from dummy data and existed farm should have the same value")
+	a.Equal(fixtures.Ponds[0].FarmId, pond.FarmId, "both of the farm_id from dummy data and existed farm should have the same value")
 	a.NoError(err, "should have no error when fetching farm (singular fetch by id)")
 }
 
