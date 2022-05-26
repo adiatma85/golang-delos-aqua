@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     ports:
-    # <Port exposed> : < MySQL Port running inside container>
+    # <Port exposed> : < Postgres Port running inside container>
       - '5433:5432'
     volumes: 
       - db:/var/lib/postgresql/data
