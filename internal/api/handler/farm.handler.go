@@ -51,7 +51,7 @@ func (handler *FarmHandler) CreateFarm(c *gin.Context) {
 		return
 	}
 
-	farmRepo := repository.GetFarmRepository()
+	farmRepo := handler.FarmRepository
 	farmModel := &models.Farm{}
 
 	// smapping the struct
@@ -70,7 +70,7 @@ func (handler *FarmHandler) CreateFarm(c *gin.Context) {
 
 // HandlerFunc to Get All
 func (handler *FarmHandler) GetAllFarm(c *gin.Context) {
-	farmRepo := repository.GetFarmRepository()
+	farmRepo := handler.FarmRepository
 
 	farms, err := farmRepo.GetAll()
 
@@ -95,7 +95,7 @@ func (handler *FarmHandler) GetAllFarm(c *gin.Context) {
 
 // HandlerFunc to Get By Id
 func (handler *FarmHandler) GetById(c *gin.Context) {
-	farmRepo := repository.GetFarmRepository()
+	farmRepo := handler.FarmRepository
 
 	farm, err := farmRepo.GetById(c.Param("farmId"))
 
@@ -129,7 +129,7 @@ func (handler *FarmHandler) Update(c *gin.Context) {
 		return
 	}
 
-	farmRepo := repository.GetFarmRepository()
+	farmRepo := handler.FarmRepository
 
 	// Check whether "ID" is specified in payload or not
 	if updateFarmRequest.ID == 0 {
@@ -173,7 +173,7 @@ func (handler *FarmHandler) Update(c *gin.Context) {
 
 // HandlerFunc to Delete
 func (handler *FarmHandler) Delete(c *gin.Context) {
-	farmRepo := repository.GetFarmRepository()
+	farmRepo := handler.FarmRepository
 	existedFarm, err := farmRepo.GetById(c.Param("farmId"))
 
 	// If error
