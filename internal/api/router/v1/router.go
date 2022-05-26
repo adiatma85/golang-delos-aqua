@@ -50,5 +50,18 @@ func Setup() *gin.Engine {
 		farmGroup.PUT("", farmHandler.Update)
 		farmGroup.DELETE(":farmId", farmHandler.Delete)
 	}
+
+	// PondGroup
+	pondGroup := v1Route.Group("pond")
+	pondHandler := handler.GetPondHandler()
+	{
+		pondGroup.GET("", pondHandler.GetAllPond)
+		pondGroup.GET(":farmId", pondHandler.GetById)
+		pondGroup.POST("", pondHandler.CreatePond)
+		// Non-standar PUT route according to requirement
+		pondGroup.PUT("", pondHandler.Update)
+		pondGroup.DELETE(":farmId", pondHandler.Delete)
+	}
+
 	return app
 }
