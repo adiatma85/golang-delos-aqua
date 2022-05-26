@@ -34,7 +34,7 @@ func (suite *FarmRepositorySuite) SetupSuite() {
 	}
 }
 
-// Create User instance Test
+// Create Farm instance Test
 func (suite *FarmRepositorySuite) TestCreateFarm_Positive() {
 	// Creating Farm
 	createdFarm, err := suite.farmRepo.Create(willBeFarm)
@@ -58,19 +58,52 @@ func (suite *FarmRepositorySuite) TestGetById_Positive() {
 	farm, err := suite.farmRepo.GetById("1")
 	a := suite.Assert()
 
-	a.Equal(uint(1), farm.ID, "")
-	suite.Equal(farms[0].Name, farm.Name, "both of the name from dummy data and existed farm should have the same value")
-	a.NoError(err, "should have no error when fetching user (singular fetch by id)")
+	a.Equal(uint(1), farm.ID, "both of the id from client data and existed farm should have the same value")
+	a.Equal(farms[0].Name, farm.Name, "both of the name from dummy data and existed farm should have the same value")
+	a.NoError(err, "should have no error when fetching farm (singular fetch by id)")
 }
 
+// Test Get Farm (Negative)
 func (suite *FarmRepositorySuite) TestGetById_Negative() {
-	_, err := suite.farmRepo.GetById("1000")
+	nonExistentFarm, err := suite.farmRepo.GetById("1000")
 	a := suite.Assert()
 
-	a.Error(err, "should have an error when fetching user (singular fetch by id)")
+	a.Error(err, "should have an error when fetching farm (singular fetch by id)")
+	a.ErrorIs(err, gorm.ErrRecordNotFound, "the type of error must be error not found")
 	a.Equal(err.Error(), "record not found")
+	a.Nil(nonExistentFarm, "the resource shoul have not exist or nil")
 }
 
+// Test Get Farm by defined model struct
+func (suite *FarmRepositorySuite) TestGetByModel_Positive() {
+	where := models.Farm{
+		Name: "Farm 2",
+	}
+
+	farm, err := suite.farmRepo.GetByModel(where)
+	a := suite.Assert()
+
+	// Assert each field that exist to make sure both of them is match
+	a.Equal(where.Name, farm.Name, "both of the name from dummy data and existed farm should have the same value")
+	a.NoError(err, "should have no error when fetching farm (singular fetch by defined struct)")
+}
+
+// Test Get Farm by defined model struct (negative)
+func (suite *FarmRepositorySuite) TestGetByModel_Negative() {
+	where := models.Farm{
+		Name: "lorem ipsum",
+	}
+
+	nonExistentFarm, err := suite.farmRepo.GetByModel(where)
+	a := suite.Assert()
+
+	a.Error(err, "should have an error when fetching farm (singular fetch by model)")
+	a.ErrorIs(err, gorm.ErrRecordNotFound, "the type of error must be error not found")
+	a.Equal(err.Error(), "record not found")
+	a.Nil(nonExistentFarm, "the resource shoul have not exist or nil")
+}
+
+// Test Update Existing Resource
 func (suite *FarmRepositorySuite) TestUpdateExistedFarm_Positive() {
 	a := suite.Assert()
 	updateFarm := models.Farm{
@@ -89,6 +122,7 @@ func (suite *FarmRepositorySuite) TestUpdateExistedFarm_Positive() {
 	a.NoError(err, "should have no error when updating farm")
 }
 
+// Test Delete Existing Resource
 func (suite *FarmRepositorySuite) TestDeleteFarm_Positive() {
 	a := suite.Assert()
 	farm := models.Farm{
@@ -100,3 +134,5 @@ func (suite *FarmRepositorySuite) TestDeleteFarm_Positive() {
 	err := suite.farmRepo.Delete(&farm)
 	a.NoError(err, "should have no error when deleting farm")
 }
+
+// Menambahkan find by model

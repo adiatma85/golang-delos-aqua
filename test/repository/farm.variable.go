@@ -11,6 +11,10 @@ var farms []models.Farm = []models.Farm{
 		Name:  "Random Farm",
 		Ponds: []models.Pond{},
 	},
+	{
+		Name:  "Farm 2",
+		Ponds: []models.Pond{},
+	},
 }
 
 var willBeFarm models.Farm = models.Farm{
