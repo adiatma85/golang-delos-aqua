@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/adiatma85/golang-rest-template-api/internal/pkg/models"
@@ -130,15 +131,15 @@ func (handler *FarmHandler) Update(c *gin.Context) {
 
 	farmRepo := repository.GetFarmRepository()
 
-	// check whether the farm is exist or not
-	existedFarm, err := farmRepo.GetById(c.Param("farmId"))
-
-	// If farm does not exist, create it
-	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-		// Create
-		// Need more improvise to make it
+	// Check whether "ID" is specified in payload or not
+	if updateFarmRequest.ID == 0 {
+		// Not specified, so create it
 		farmModel := &models.Farm{}
+
 		smapping.FillStruct(farmModel, smapping.MapFields(&updateFarmRequest))
+
+		// Check whether there is error when creating
+		// Need new "small functional" so it does not duplicate
 		if newFarm, err := farmRepo.Create(*farmModel); err != nil {
 			response := response.BuildFailedResponse("failed to add new farm due to internal server error", err.Error())
 			c.AbortWithStatusJSON(http.StatusInternalServerError, response)
@@ -146,20 +147,28 @@ func (handler *FarmHandler) Update(c *gin.Context) {
 			response := response.BuildSuccessResponse("success add new farm instance to database", newFarm)
 			c.JSON(http.StatusOK, response)
 		}
-		return
+	} else {
+		// Specified so update it
+		existedFarm, err := farmRepo.GetById(fmt.Sprint(updateFarmRequest.ID))
+
+		// If specified resource does not exist
+		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+			response := response.BuildFailedResponse("failed to fetch data due to no record found with specified id", err.Error())
+			c.AbortWithStatusJSON(http.StatusNotFound, response)
+			return
+		}
+
+		smapping.FillStruct(existedFarm, smapping.MapFields(&updateFarmRequest))
+		err = farmRepo.Update(existedFarm)
+
+		if err != nil {
+			response := response.BuildFailedResponse("failed to update a farm", err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError, response)
+			return
+		}
+
+		c.JSON(http.StatusNoContent, nil)
 	}
-
-	smapping.FillStruct(existedFarm, smapping.MapFields(&updateFarmRequest))
-
-	err = farmRepo.Update(existedFarm)
-
-	if err != nil {
-		response := response.BuildFailedResponse("failed to update a farm", err.Error())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, response)
-		return
-	}
-
-	c.JSON(http.StatusNoContent, nil)
 }
 
 // HandlerFunc to Delete

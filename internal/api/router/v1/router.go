@@ -46,8 +46,8 @@ func Setup() *gin.Engine {
 		farmGroup.GET("", farmHandler.GetAllFarm)
 		farmGroup.GET(":farmId", farmHandler.GetById)
 		farmGroup.POST("", farmHandler.CreateFarm)
-		// Need PUT Route Inmprovisasion
-		farmGroup.PUT(":farmId", farmHandler.Update)
+		// Non-standar PUT route according to requirement
+		farmGroup.PUT("", farmHandler.Update)
 		farmGroup.DELETE(":farmId", farmHandler.Delete)
 	}
 	return app
