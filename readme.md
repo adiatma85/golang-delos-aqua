@@ -111,5 +111,5 @@ pkg
                 - [200] Return the list of all traffic records
                 - [404] If there is no anything in traffic records table, then it return no found
 # How to Test?
-1. 1. Run docker storage with ``docker-compose -f docker-compose-storage_test.yml up -d``
+1. Run docker storage with ``docker-compose -f docker-compose-storage_test.yml up -d``
 2. Rung ``go test ./test/repository`` for repository test or ``go test ./test/handler`` for handler test
